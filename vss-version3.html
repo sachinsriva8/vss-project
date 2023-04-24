@@ -1,0 +1,225 @@
+<!Doctype html>
+<html lang="en">
+ <head>
+    <style>
+        /* setting height and width of html page*/
+        html{
+            height: 500px;
+            width: 400px;
+            margin: 40px 400px;
+        }
+        body{
+            font-family: arial,sans-serif;   /*changing the font in entire body tag to arial,sans-sherif*/
+        }
+        div{
+            height: 90%;
+            width: 400px;
+            padding: 40px;
+            border: 1px solid rgb(188, 188, 188);
+            border-radius: 5px;
+            outline: 10px solid rgb(228, 227, 227);
+        }
+        h1{
+            text-align: justify;
+        }
+        p{
+            width: 100%;
+            text-align: justify;
+            letter-spacing: 1px; /*providing letter space of 1px to get desired output*/
+        }
+        input[type=password]{    /*styling password blocks*/
+            width: 100%;
+            padding: 8px 20px;
+            margin: 5px 0;
+            display: inline-block;
+            border: 2px groove #ffffff;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #pass:hover,#repass:hover{   /* providing style when cursor hover over password bocks it will be highlighted*/
+            border-color: rgb(127, 125, 125);
+        }
+
+        ul{                          /* styling unstructured list */
+            width: 100%;
+            list-style: disc;
+            margin: 5px 0;
+            padding: 8px 20px;
+            overflow: hidden;
+        }
+        #lower,#special{           /*making lowercase and special character check list side by side*/
+            float: left;
+            width: 50%;
+        }
+        #upper,#chr{               /*making uppercase and min(8)character check list side by side*/
+            float: left;
+            width: 50%;
+        }
+        #number{                   /*making number check list to stay on the left by using inline-start*/
+            float: inline-start;
+            width: 50%;
+
+        }
+
+        input[type=submit]{      /*styling submitt button*/
+            width: 100%;
+            margin: 10px 0;
+            display: inline-block;
+            background-color: rgb(78, 78, 255);
+            font-weight: bold;
+            text-align: center;
+            color: azure;
+            padding: 14px 20px;
+            border: 2px solid #f5f4f4;
+            border-radius: 6px;
+            box-sizing: border-box;
+
+        }
+        #submit:hover{                          /* providing style when cursor hover over submitt button it will show in dark blue*/
+            background-color: rgb(0, 0, 255);     
+
+        }
+        
+        .valid{               /* making each ul-list green  when javascript updates the status for each ul-list*/   
+           color: green;
+        }
+        .valid::marker{       /* when ul becomes green than changing bullet point to tick mark*/
+            position: inherit;
+            left: -35px;
+            content: '\2713';
+        }
+        .invalid{             /* making each ul-list red initially,untill and unless status updated by javascript changes list to green.*/
+            color: red;
+        }
+        .invalid::marker{     /* when ul becomes red (initially) changing bullet point to cross */
+            position: inherit;
+            left: -35px;
+            content: '\00d7';
+        }
+    </style>
+ </head>   
+<body>
+    <div>    <!--putting my enntire form as well as initial text in a sinle divsion-->
+        <p id="error"></p>  <!--to show updated message at top(updated by javascript) whether each condition for password is correct or not -->
+    <h1>Choose new password</h1>
+    <p>Almost done.Enter your new password and your all set.</p>
+        <form>
+            <label for="pass"><b>Create a password</b></label><br> <!--used onkeyup i.e.., when user pressed the key condition will be checked using javascript to update status of uo-rdered list-->
+            <input type="password" id="pass" name="pass" required onkeyup="check();"><br><br> 
+            <label for="repass"><b>Confirm new password</b></label><br>
+            <input type="password" id="repass" name="repass" required><br>
+            <ul>  <!--creating un-ordered list of 5 lists -->
+                <li class="invalid" id="lower">one lowercase character</li>  <li class="invalid" id="special">one special character</li>
+                <li class="invalid" id="upper">one uppercase character</li>  <li class="invalid" id="chr">8 character minimum</li>
+                <li class="invalid" id="number">one number</li>
+            </ul>
+ 
+                      
+        <input type="submit" id="submit" value="Reset password" onclick="recheck();"> 
+        </form> <!--used onclick on reset pasword button so that when user click it, javascript will check condition and will alert whether password is correct ot not -->
+    </div>   
+</body>
+</html>
+
+<script>  // javascript
+    var check=function(){ //function to check whether password entered by user fulfill all criteria or not,based on that displaying message at top.
+    var ps=document.getElementById("pass").value; //got password value stored in ps variable.
+
+             //line 129-133, getting values of each ul-list and storing it to update the status of each ul-list.
+    var lower=document.getElementById("lower");
+    var spcl=document.getElementById("special");
+    var upper=document.getElementById("upper");
+    var chr=document.getElementById("chr");
+    var number=document.getElementById("number");
+    function checkSpecialcharater(){  //created fnction to check whether passwrd contains special character or not.
+    var special=["!","@","#","$","%","^","&","*","(",")","_","+","-","=","[","]","{","}","|",";","'",":",'"',",",".","/","<",">","?"]
+          //line-135, created array containing special characters
+    for(i=0;i<special.length;i++){
+    var b=0;
+    if (ps.indexOf(special[i])==-1){  //using indexof() to check whether my password contain special character or not.
+       b=1;
+    }else{
+        b=0;
+        break; //if we get even a single special character then loop will break.
+    }
+    }
+    if (b==1){ 
+    return false;  // function returns false if special character is not present.
+    }else{
+    return true;  // function returns true if special character is present.
+    }
+    }
+
+    var spl=checkSpecialcharater()  //storing value returned by checkSpecialcharacte() in variable spl.
+    var final=1;
+    if (ps.length<8){
+        chr.classList.add("invalid");  
+        chr.classList.remove("valid");    //if condition fulfills,ul-list min(8) character would be red.    
+        document.getElementById("error").innerHTML="Pasword should contain atleast 8 charcater";  //displaying message at the top of form if condition fulfills.
+        final=1;
+    }else{
+        chr.classList.add("valid");
+        chr.classList.remove("invalid");  //if condition do not fulfills, updating ul-list min(8) character to chnge color to green.
+        final=0;
+    }
+    if (ps.match(/[0-9]/g)==null){
+        number.classList.add("invalid");
+        number.classList.remove("valid");
+        document.getElementById("error").innerHTML="pasword must contain atleast one Capital letter";
+        final=1;
+    }else{
+        number.classList.add("valid");
+        number.classList.remove("invalid");
+        final=0;
+    }
+    if (ps.match(/[A-Z]/g)==null){
+        upper.classList.add("invalid");
+        upper.classList.remove("valid");
+        document.getElementById("error").innerHTML="pasword must contain atleast one Capital letter";
+        final=1;
+    }else{
+        upper.classList.add("valid");
+        upper.classList.remove("invalid");
+        final=0;
+    } 
+    if (ps.match(/[a-z]/g)==null){
+        lower.classList.add("invalid");
+        lower.classList.remove("valid");
+        document.getElementById("error").innerHTML="pasword must contain atleast one Small letter";
+        final=1;
+    } else{
+        lower.classList.add("valid");
+        lower.classList.remove("invalid");
+        final=0;
+    } 
+    if (spl!=true){
+        spcl.classList.add("invalid");
+        spcl.classList.remove("valid");
+        document.getElementById("error").innerHTML="password must contain one special character";
+        final=1;
+    }
+    else {
+        spcl.classList.add("valid");
+        spcl.classList.remove("invalid");
+        final=0;
+    }
+  if (final==0){
+    document.getElementById("error").innerHTML="Password fulfill each criteria"
+  }
+}
+
+var recheck= function(){  //function to check if re-entered password matches inital entered password and gives alert.
+    pswrd=document.getElementById("pass").value;
+    rp=document.getElementById("repass").value;
+
+    if (pswrd!='' && rp!=''){
+       if (pswrd!=rp){
+        alert("password not matched")
+       }else{
+        alert("password matched and changed")
+       }
+       }else{
+        alert("Enter pasword and retype password in form")
+    }
+}
+</script>
